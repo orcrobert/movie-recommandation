@@ -78,3 +78,5 @@
 /Users/robert/Documents/Programming/machine-learning/movie-recommandation/frontend/blazor/obj/Debug/net9.0/blazor.pdb
 /Users/robert/Documents/Programming/machine-learning/movie-recommandation/frontend/blazor/obj/Debug/net9.0/blazor.genruntimeconfig.cache
 /Users/robert/Documents/Programming/machine-learning/movie-recommandation/frontend/blazor/obj/Debug/net9.0/ref/blazor.dll
+/Users/robert/Documents/Programming/machine-learning/movie-recommandation/frontend/blazor/obj/Debug/net9.0/blazor.RazorAssemblyInfo.cache
+/Users/robert/Documents/Programming/machine-learning/movie-recommandation/frontend/blazor/obj/Debug/net9.0/blazor.RazorAssemblyInfo.cs

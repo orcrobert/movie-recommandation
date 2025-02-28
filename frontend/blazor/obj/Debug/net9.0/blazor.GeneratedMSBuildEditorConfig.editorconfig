@@ -59,3 +59,11 @@ build_metadata.AdditionalFiles.CssScope = b-vtmydj7bx8
 [/Users/robert/Documents/Programming/machine-learning/movie-recommandation/frontend/blazor/Components/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-znj2cfoc2l
+
+[/Users/robert/Documents/Programming/machine-learning/movie-recommandation/frontend/blazor/Components/Pages/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9TaGFyZWQvX0xheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/robert/Documents/Programming/machine-learning/movie-recommandation/frontend/blazor/Components/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9fSG9zdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

@@ -1,9 +1,13 @@
 @page "/fetchdata"
+@rendermode InteractiveServer
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @inject HttpClient Http
 
 <h3>Data</h3>
+
+<input type="text" @bind="@movieTitle" placeholder="Enter a movie title" />
+<button type="button" @onclick="OnButtonClick" @onclick:preventDefault>Fetch Recommendations</button>
 
 @if (isLoading)
 {
@@ -31,8 +35,9 @@ else
     private bool isLoading = false;
     private List<string> recommendedMovies = new List<string>();
     private string errorMessage;
+    private string movieTitle = "";
 
-    protected override async Task OnInitializedAsync()
+    private async Task OnButtonClick()
     {
         await FetchRecommendations();
     }
@@ -40,6 +45,15 @@ else
     private async Task FetchRecommendations()
     {
         Console.WriteLine("FetchRecommendations method called");
+
+        if (string.IsNullOrWhiteSpace(movieTitle))
+        {
+            errorMessage = "Please enter a movie title.";
+            Console.WriteLine("Movie title is empty");
+            return;
+        }
+
+        Console.WriteLine($"Fetching recommendations for: {movieTitle}");
 
         errorMessage = null;
         recommendedMovies.Clear();
@@ -49,7 +63,6 @@ else
 
         try
         {
-            var movieTitle = "Inception";
             var apiUrl = $"http://localhost:8080/api/recommend/{movieTitle}";
             Console.WriteLine($"Requesting {apiUrl}");
 
@@ -78,6 +91,7 @@ else
             StateHasChanged();
         }
     }
+
     private class ApiResponse
     {
         [JsonPropertyName("recommended_movies")]
