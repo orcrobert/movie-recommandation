@@ -5,6 +5,9 @@ import pickle
 
 app = FastAPI()
 
+movies = pd.read_csv("data/movies.csv")
+similarity = pickle.load(open("data/similarity.pkl", "rb"))
+
 def recommend_movie(movie_title, movies_df, similarity_matrix):
     if movie_title not in movies_df['title'].values:
         return "Movie not found."
@@ -21,7 +24,3 @@ def get_recommendations(movie_title: str):
     recommendations = recommend_movie(movie_title, movies, similarity)
     return {"recommended_movies": recommendations}
 
-
-if __name__ == '__main__':
-    movies = pd.read_csv("../data/movies.csv")
-    similarity = pickle.load(open("../data/similarity.pkl", "rb"))
