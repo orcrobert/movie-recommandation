@@ -1,0 +1,4 @@
+com/orcrobert/movierecommendation/service/RecommendationService.class
+com/orcrobert/movierecommendation/controller/RecommendationController.class
+com/orcrobert/movierecommendation/model/MovieRecommendationResponse.class
+com/orcrobert/movierecommendation/MovieRecommandationApplication.class
