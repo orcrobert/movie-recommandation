@@ -1,5 +1,5 @@
-
 backend/py-ml/data/movies.csv
 backend/py-ml/data/list.pkl
 backend/py-ml/data/similarity.pkl
-.vscode/settings.json
+.vscode/
+__pycache__/

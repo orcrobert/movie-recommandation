@@ -1,0 +1,86 @@
+@page "/fetchdata"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@inject HttpClient Http
+
+<h3>Data</h3>
+
+@if (isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (errorMessage != null)
+{
+    <p><em>@errorMessage</em></p>
+}
+else if (recommendedMovies != null && recommendedMovies.Any())
+{
+    <ul>
+        @foreach (var movie in recommendedMovies)
+        {
+            <li>@movie</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No recommendations found.</p>
+}
+
+@code {
+    private bool isLoading = false;
+    private List<string> recommendedMovies = new List<string>();
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchRecommendations();
+    }
+
+    private async Task FetchRecommendations()
+    {
+        Console.WriteLine("FetchRecommendations method called");
+
+        errorMessage = null;
+        recommendedMovies.Clear();
+
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            var movieTitle = "Inception";
+            var apiUrl = $"http://localhost:8080/api/recommend/{movieTitle}";
+            Console.WriteLine($"Requesting {apiUrl}");
+
+            var response = await Http.GetFromJsonAsync<ApiResponse>(apiUrl);
+            Console.WriteLine("Received API response: " + JsonSerializer.Serialize(response));
+
+            if (response?.RecommendedMovies != null && response.RecommendedMovies.Any())
+            {
+                recommendedMovies = response.RecommendedMovies;
+                Console.WriteLine($"Recommendations found: {string.Join(", ", recommendedMovies)}");
+            }
+            else
+            {
+                errorMessage = "No recommendations found.";
+                Console.WriteLine("No recommendations found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred while fetching data: {ex.Message}";
+            Console.WriteLine($"Error: {errorMessage}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+    private class ApiResponse
+    {
+        [JsonPropertyName("recommended_movies")]
+        public List<string> RecommendedMovies { get; set; } = new();
+    }
+}

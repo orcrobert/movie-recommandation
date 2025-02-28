@@ -1,4 +1,5 @@
 /Users/robert/Documents/Programming/machine-learning/movie-recommandation/backend/springboot/src/main/java/com/orcrobert/movierecommendation/MovieRecommandationApplication.java
+/Users/robert/Documents/Programming/machine-learning/movie-recommandation/backend/springboot/src/main/java/com/orcrobert/movierecommendation/config/CorsConfig.java
 /Users/robert/Documents/Programming/machine-learning/movie-recommandation/backend/springboot/src/main/java/com/orcrobert/movierecommendation/controller/RecommendationController.java
 /Users/robert/Documents/Programming/machine-learning/movie-recommandation/backend/springboot/src/main/java/com/orcrobert/movierecommendation/model/MovieRecommendationResponse.java
 /Users/robert/Documents/Programming/machine-learning/movie-recommandation/backend/springboot/src/main/java/com/orcrobert/movierecommendation/service/RecommendationService.java
