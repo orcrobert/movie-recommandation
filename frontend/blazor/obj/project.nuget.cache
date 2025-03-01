@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "hoasRsPCGGs=",
+  "dgSpecHash": "M0QgTD67zrg=",
   "success": true,
   "projectFilePath": "/Users/robert/Documents/Programming/machine-learning/movie-recommandation/frontend/blazor/blazor.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/Users/robert/.nuget/packages/restsharp/112.1.0/restsharp.112.1.0.nupkg.sha512"
+  ],
   "logs": []
 }

@@ -3,6 +3,7 @@
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @inject HttpClient Http
+@inject ITmdbService TmdbService
 
 <h3>Data</h3>
 
@@ -19,12 +20,22 @@ else if (errorMessage != null)
 }
 else if (recommendedMovies != null && recommendedMovies.Any())
 {
-    <ul>
+    <div>
         @foreach (var movie in recommendedMovies)
         {
-            <li>@movie</li>
+            <div>
+                <p><strong>@movie.Title</strong></p>
+                @if (!string.IsNullOrEmpty(movie.ImageUrl))
+                {
+                    <img src="@movie.ImageUrl" alt="@movie.Title" width="150" />
+                }
+                else
+                {
+                    <p>No Image Available</p>
+                }
+            </div>
         }
-    </ul>
+    </div>
 }
 else
 {
@@ -33,7 +44,7 @@ else
 
 @code {
     private bool isLoading = false;
-    private List<string> recommendedMovies = new List<string>();
+    private List<MovieRecommendation> recommendedMovies = new List<MovieRecommendation>();
     private string errorMessage;
     private string movieTitle = "";
 
@@ -44,16 +55,11 @@ else
 
     private async Task FetchRecommendations()
     {
-        Console.WriteLine("FetchRecommendations method called");
-
         if (string.IsNullOrWhiteSpace(movieTitle))
         {
             errorMessage = "Please enter a movie title.";
-            Console.WriteLine("Movie title is empty");
             return;
         }
-
-        Console.WriteLine($"Fetching recommendations for: {movieTitle}");
 
         errorMessage = null;
         recommendedMovies.Clear();
@@ -64,26 +70,27 @@ else
         try
         {
             var apiUrl = $"http://localhost:8080/api/recommend/{movieTitle}";
-            Console.WriteLine($"Requesting {apiUrl}");
-
             var response = await Http.GetFromJsonAsync<ApiResponse>(apiUrl);
-            Console.WriteLine("Received API response: " + JsonSerializer.Serialize(response));
 
             if (response?.RecommendedMovies != null && response.RecommendedMovies.Any())
             {
-                recommendedMovies = response.RecommendedMovies;
-                Console.WriteLine($"Recommendations found: {string.Join(", ", recommendedMovies)}");
+                var moviesWithImages = new List<MovieRecommendation>();
+                foreach (var title in response.RecommendedMovies)
+                {
+                    string imageUrl = await TmdbService.GetMovieImageAsync(title);
+                    moviesWithImages.Add(new MovieRecommendation { Title = title, ImageUrl = imageUrl });
+                }
+
+                recommendedMovies = moviesWithImages;
             }
             else
             {
                 errorMessage = "No recommendations found.";
-                Console.WriteLine("No recommendations found.");
             }
         }
         catch (Exception ex)
         {
             errorMessage = $"An error occurred while fetching data: {ex.Message}";
-            Console.WriteLine($"Error: {errorMessage}");
         }
         finally
         {
@@ -96,5 +103,11 @@ else
     {
         [JsonPropertyName("recommended_movies")]
         public List<string> RecommendedMovies { get; set; } = new();
+    }
+
+    private class MovieRecommendation
+    {
+        public string Title { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

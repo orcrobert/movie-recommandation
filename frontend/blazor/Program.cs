@@ -3,6 +3,7 @@ using  blazor.Components;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:8080/") });
+builder.Services.AddScoped<ITmdbService, TmdbService>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
