@@ -3,6 +3,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    margin-right: 80px;
+    margin-left: 80px;
 }
 
 main[b-vtmydj7bx8] {
@@ -91,12 +93,12 @@ main[b-vtmydj7bx8] {
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss[b-vtmydj7bx8] {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss[b-vtmydj7bx8] {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
 /* _content/blazor/Components/Layout/NavMenu.razor.rz.scp.css */
 .navbar-toggler[b-znj2cfoc2l] {
     appearance: none;

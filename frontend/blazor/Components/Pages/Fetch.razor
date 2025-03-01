@@ -5,10 +5,11 @@
 @inject HttpClient Http
 @inject ITmdbService TmdbService
 
-<h3>Data</h3>
-
-<input type="text" @bind="@movieTitle" placeholder="Enter a movie title" />
-<button type="button" @onclick="OnButtonClick" @onclick:preventDefault>Fetch Recommendations</button>
+<h3>Get movie recommendations</h3>
+<div style="display: flex; flex-direction: column; align-items: center;">
+    <input class="form-control" style="width: 60%;" type="text" @bind="@movieTitle" placeholder="Enter a movie title" />
+    <button class="btn btn-dark" style="margin-top: 15px; margin-bottom: 15px;" type="button" @onclick="OnButtonClick" @onclick:preventDefault>Fetch Recommendations</button>
+</div>
 
 @if (isLoading)
 {
@@ -20,10 +21,10 @@ else if (errorMessage != null)
 }
 else if (recommendedMovies != null && recommendedMovies.Any())
 {
-    <div>
+    <div style="display: flex; flex-direction: column;">
         @foreach (var movie in recommendedMovies)
         {
-            <div>
+            <div style="flex: 1;">
                 <p><strong>@movie.Title</strong></p>
                 @if (!string.IsNullOrEmpty(movie.ImageUrl))
                 {

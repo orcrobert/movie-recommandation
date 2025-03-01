@@ -14,7 +14,7 @@ def recommend_movie(movie_title, movies_df, similarity_matrix):
 
     index = movies_df[movies_df['title'] == movie_title].index[0]
     similar_movies = list(enumerate(similarity_matrix[index]))
-    sorted_movies = sorted(similar_movies, key=lambda x: x[1], reverse=True)[1:6]
+    sorted_movies = sorted(similar_movies, key=lambda x: x[1], reverse=True)[1:11]
     
     recommendations = [movies_df.iloc[i[0]].title for i in sorted_movies]
     return recommendations
