@@ -40,7 +40,7 @@ The project is built using a modern microservices architecture with three main c
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
+git clone https://github.com/orcrobert/movie-recommandation.git
 cd movie-recommendation
 ```
 
