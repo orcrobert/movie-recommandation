@@ -13,7 +13,9 @@
 
 @if (isLoading)
 {
-    <p><em>Loading...</em></p>
+    <div style="position: relative; height: 80vh;">
+        <h2 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"><strong>Loading...</strong></h2>
+    </div>
 }
 else if (errorMessage != null)
 {
@@ -21,11 +23,12 @@ else if (errorMessage != null)
 }
 else if (recommendedMovies != null && recommendedMovies.Any())
 {
-    <div style="display: flex; flex-direction: column;">
-        @foreach (var movie in recommendedMovies)
-        {
-            <div style="flex: 1;">
-                <p><strong>@movie.Title</strong></p>
+    <h3>Recommendations for: @movieTitle</h3>
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+    @foreach (var movie in recommendedMovies)
+    {
+        <div style="display: flex; align-items: flex-start; gap: 20px; border-bottom: 1px solid #ddd; padding-bottom: 20px;">
+            <div>
                 @if (!string.IsNullOrEmpty(movie.ImageUrl))
                 {
                     <img src="@movie.ImageUrl" alt="@movie.Title" width="150" />
@@ -35,7 +38,16 @@ else if (recommendedMovies != null && recommendedMovies.Any())
                     <p>No Image Available</p>
                 }
             </div>
-        }
+            
+            <div style="flex-grow: 1;">
+                <p><strong>@movie.Title</strong></p>
+                <p><strong>Genres:</strong> @string.Join(", ", movie.Genres)</p>
+                <p><strong>Release Date:</strong> @movie.ReleaseDate.ToString("MMMM dd, yyyy")</p>
+                <p><strong>Rating:</strong> @movie.VoteAverage</p>
+                <p><strong>Overview:</strong> @movie.Overview</p>
+            </div>
+        </div>
+    }
     </div>
 }
 else
@@ -75,14 +87,25 @@ else
 
             if (response?.RecommendedMovies != null && response.RecommendedMovies.Any())
             {
-                var moviesWithImages = new List<MovieRecommendation>();
+                var moviesWithDetails = new List<MovieRecommendation>();
                 foreach (var title in response.RecommendedMovies)
                 {
-                    string imageUrl = await TmdbService.GetMovieImageAsync(title);
-                    moviesWithImages.Add(new MovieRecommendation { Title = title, ImageUrl = imageUrl });
+                    var movieDetails = await TmdbService.GetMovieDetailsAsync(title);
+                    if (movieDetails != null)
+                    {
+                        moviesWithDetails.Add(new MovieRecommendation 
+                        { 
+                            Title = movieDetails.Title, 
+                            ImageUrl = movieDetails.PosterUrl, 
+                            Genres = movieDetails.Genres.Select(g => g.Name).ToList(),
+                            ReleaseDate = DateTime.Parse(movieDetails.ReleaseDate),
+                            VoteAverage = movieDetails.VoteAverage,
+                            Overview = movieDetails.Overview 
+                        });
+                    }
                 }
 
-                recommendedMovies = moviesWithImages;
+                recommendedMovies = moviesWithDetails;
             }
             else
             {
@@ -110,5 +133,9 @@ else
     {
         public string Title { get; set; }
         public string ImageUrl { get; set; }
+        public List<string> Genres { get; set; }
+        public DateTime ReleaseDate { get; set; }
+        public double VoteAverage { get; set; }
+        public string Overview { get; set; }
     }
 }

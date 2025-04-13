@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using blazor.Models;
 
 public class TmdbService : ITmdbService
 {
@@ -15,41 +16,83 @@ public class TmdbService : ITmdbService
         _httpClient = httpClient;
     }
 
-    public async Task<string> GetMovieImageAsync(string movieTitle)
+    public async Task<MovieDetails> GetMovieDetailsAsync(string movieTitle)
     {
-        if (string.IsNullOrWhiteSpace(movieTitle))
-            return "";
+        // Construct the API URL
+        var apiUrl = $"https://api.themoviedb.org/3/search/movie?api_key={ApiKey}&query={movieTitle}";
 
-        var encodedTitle = Uri.EscapeDataString(movieTitle);
-        var url = $"https://api.themoviedb.org/3/search/movie?query={encodedTitle}&api_key={ApiKey}";
+        // Get the response from TMDb API
+        var response = await _httpClient.GetFromJsonAsync<ApiResponse>(apiUrl);
 
-        try
+        // If there are results, fetch the first movie's details
+        if (response?.Results != null && response.Results.Any())
         {
-            var response = await _httpClient.GetFromJsonAsync<TmdbResponse>(url);
+            var movieId = response.Results.First().Id;
+            var detailsUrl = $"https://api.themoviedb.org/3/movie/{movieId}?api_key={ApiKey}";
 
-            if (response?.Results != null && response.Results.Any())
+            var movieDetails = await _httpClient.GetFromJsonAsync<MovieDetails>(detailsUrl);
+
+            if (!string.IsNullOrEmpty(movieDetails?.PosterPath))
             {
-                var firstMovie = response.Results.First();
-                return !string.IsNullOrEmpty(firstMovie.PosterPath) ? $"{ImageBaseUrl}{firstMovie.PosterPath}" : "";
+                movieDetails.PosterUrl = $"{ImageBaseUrl}{movieDetails.PosterPath}";
             }
 
-            return "";
+            return movieDetails;
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error fetching TMDB image: {ex.Message}");
-            return "";
-        }
-    }
 
-    private class TmdbResponse
-    {
-        public List<Movie> Results { get; set; } = new();
+        return null;
     }
+}
 
-    private class Movie
-    {
-        [JsonPropertyName("poster_path")]
-        public string PosterPath { get; set; }
-    }
+public class TmdbResponse
+{
+    public List<Movie> Results { get; set; } = new();
+}
+
+public class Movie
+{
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("title")]
+    public string Title { get; set; }
+
+    [JsonPropertyName("poster_path")]
+    public string PosterPath { get; set; }
+}
+
+public class MovieDetails
+{
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("title")]
+    public string Title { get; set; }
+
+    [JsonPropertyName("genres")]
+    public List<Genre> Genres { get; set; }
+
+    [JsonPropertyName("release_date")]
+    public string ReleaseDate { get; set; }
+
+    [JsonPropertyName("vote_average")]
+    public double VoteAverage { get; set; }
+
+    [JsonPropertyName("overview")]
+    public string Overview { get; set; }
+
+    [JsonPropertyName("poster_path")]
+    public string PosterPath { get; set; }
+
+    // To store the full image URL (concatenated with base URL)
+    public string PosterUrl { get; set; }
+
+    [JsonPropertyName("review")]
+    public string Review { get; set; } // If available in the API
+}
+
+public class Genre
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 }
